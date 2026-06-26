@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nosso Casamento | Organização Inteligente</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Organizador de Casamento</h1>
+      <p>Encontre fornecedores e planeje o seu grande dia</p>
+    </header>
+
+    <nav>
+      <button class="tab-btn active" onclick="abrirAba(event, 'busca')">
+        Buscar Fornecedores
+      </button>
+      <button class="tab-btn" onclick="abrirAba(event, 'orcamento')">
+        Meu Orçamento
+      </button>
+      <button class="tab-btn" onclick="abrirAba(event, 'convidados')">
+        Convidados
+      </button>
+      <button class="tab-btn" onclick="abrirAba(event, 'cronograma')">
+        Cronograma
+      </button>
+    </nav>
+
+    <main class="container">
+      <!-- ABA: BUSCA DE FORNECEDORES -->
+      <section id="busca" class="aba active">
+        <h2>Encontre seus Fornecedores</h2>
+
+        <div class="filtro-box">
+          <h3>1. Qual o seu orçamento total?</h3>
+          <div class="form-grupo">
+            <input
+              type="number"
+              id="orcamentoMin"
+              placeholder="Mínimo (Ex: 15000)"
+            />
+            <input
+              type="number"
+              id="orcamentoMax"
+              placeholder="Máximo (Ex: 30000)"
+            />
+          </div>
+
+          <h3>2. O que você precisa?</h3>
+          <div class="grid-categorias">
+            <label
+              ><input type="checkbox" value="Buffet" class="check-categoria" />
+              Buffet</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                value="Salão de Festa"
+                class="check-categoria"
+              />
+              Salão de Festa</label
+            >
+            <label
+              ><input type="checkbox" value="Chácara" class="check-categoria" />
+              Chácara</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                value="Decoração"
+                class="check-categoria"
+              />
+              Decoração</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                value="Cerimonialista"
+                class="check-categoria"
+              />
+              Cerimonialista</label
+            >
+            <label
+              ><input type="checkbox" value="Beleza" class="check-categoria" />
+              Salão de Beleza</label
+            >
+            <label
+              ><input type="checkbox" value="Vestido" class="check-categoria" />
+              Aluguel de Vestido</label
+            >
+            <label
+              ><input type="checkbox" value="Doceria" class="check-categoria" />
+              Doceria</label
+            >
+            <label
+              ><input type="checkbox" value="Drinks" class="check-categoria" />
+              Bar de Drinks</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                value="Fotografia"
+                class="check-categoria"
+              />
+              Fotografia</label
+            >
+          </div>
+
+          <button onclick="buscarFornecedores()" class="btn-acao btn-largo">
+            Buscar Fornecedores
+          </button>
+        </div>
+
+        <div id="resultadosBusca" class="resultados-grid">
+          <!-- Os cards de fornecedores aparecerão aqui -->
+        </div>
+      </section>
+
+      <!-- ABA: MEU ORÇAMENTO -->
+      <section id="orcamento" class="aba" style="display: none">
+        <h2>Resumo do Orçamento</h2>
+
+        <div class="resumo-financeiro">
+          <div class="card-valor">
+            <span>Orçamento Disponível:</span>
+            <h3 id="displayOrcamentoMax">R$ 0,00</h3>
+          </div>
+          <div class="card-valor">
+            <span>Total Gasto:</span>
+            <h3 id="displayTotalGasto">R$ 0,00</h3>
+          </div>
+          <div class="card-valor" id="cardSaldo">
+            <span>Saldo Restante:</span>
+            <h3 id="displaySaldo">R$ 0,00</h3>
+          </div>
+        </div>
+
+        <table id="tabelaOrcamento">
+          <thead>
+            <tr>
+              <th>Serviço</th>
+              <th>Empresa</th>
+              <th>Valor</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="listaOrcamento">
+            <!-- Fornecedores escolhidos vão aqui -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ABA: CONVIDADOS -->
+      <section id="convidados" class="aba" style="display: none">
+        <h2>Lista de Convidados</h2>
+        <div class="form-grupo">
+          <input
+            type="text"
+            id="nomeConvidado"
+            placeholder="Nome do convidado"
+          />
+          <select id="grupoConvidado">
+            <option value="Família">Família</option>
+            <option value="Amigos">Amigos</option>
+            <option value="Trabalho">Trabalho</option>
+          </select>
+          <button onclick="adicionarConvidado()" class="btn-acao">
+            Adicionar
+          </button>
+        </div>
+        <table id="tabelaConvidados">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Grupo</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <!-- ABA: CRONOGRAMA -->
+      <section id="cronograma" class="aba" style="display: none">
+        <h2>Cronograma do Grande Dia</h2>
+        <ul class="linha-do-tempo">
+          <li><strong>14:00</strong> - Chegada no local para preparação</li>
+          <li><strong>16:30</strong> - Chegada dos convidados</li>
+          <li><strong>17:00</strong> - Início da Cerimônia</li>
+          <li><strong>18:30</strong> - Sessão de fotos</li>
+          <li><strong>19:00</strong> - Abertura da pista de dança e jantar</li>
+        </ul>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
