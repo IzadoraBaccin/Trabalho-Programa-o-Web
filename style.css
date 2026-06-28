@@ -1,172 +1,82 @@
+/* RESET E PADRONIZAÇÃO DE FONTES GLOBAL */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body { 
+body, input, select, button, textarea, table, th, td { 
     font-family: 'Montserrat', sans-serif; 
-    background-color: #FAFAFA; 
-    color: #111; 
 }
 
-/* Novo Layout: Sidebar e Conteúdo */
-.app-layout {
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-}
-
-/* Sidebar (Menu Lateral) */
-.sidebar {
-    width: 280px;
-    background-color: #111;
-    color: #FFF;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-}
-
-.logo {
-    padding: 2rem 1.5rem;
-    text-align: center;
-    border-bottom: 1px solid #333;
-}
-
-.logo h2 {
+h1, h2, h3, h4, .logo h2, .titulo-secao {
     font-family: 'Playfair Display', serif;
-    color: #D4AF37; /* Dourado */
-    font-size: 1.8rem;
-    font-style: italic;
 }
 
-.perfil-selector {
-    padding: 1.5rem;
-    background: #1A1A1A;
-    border-bottom: 1px solid #333;
-}
+body { background-color: #FAFAFA; color: #111; }
 
-.perfil-selector label {
-    font-size: 0.8rem;
-    color: #AAA;
-    margin-bottom: 5px;
-    display: block;
-}
+.app-layout { display: flex; height: 100vh; overflow: hidden; }
 
-.perfil-selector select {
-    width: 100%;
-    padding: 8px;
-    background: #FFF;
-    color: #111;
-    border: none;
-    border-radius: 4px;
-    font-family: 'Montserrat', sans-serif;
-    margin-bottom: 15px;
-}
+/* Sidebar */
+.sidebar { width: 280px; background-color: #111; color: #FFF; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+.logo { padding: 2rem 1.5rem; text-align: center; border-bottom: 1px solid #333; }
+.logo h2 { color: #D4AF37; font-size: 1.8rem; font-style: italic; }
+.perfil-selector { padding: 1.5rem; background: #1A1A1A; border-bottom: 1px solid #333; }
+.perfil-selector label { font-size: 0.8rem; color: #AAA; margin-bottom: 5px; display: block; }
+.perfil-selector select { width: 100%; padding: 8px; background: #FFF; color: #111; border: none; border-radius: 4px; font-weight: 600; margin-bottom: 5px; }
 
-.sidebar-acoes {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+.sidebar-nav { display: flex; flex-direction: column; padding: 1.5rem 0; }
+.tab-btn { background: none; border: none; padding: 15px 25px; text-align: left; color: #CCC; font-size: 1rem; cursor: pointer; transition: 0.3s; border-left: 4px solid transparent; }
+.tab-btn:hover, .tab-btn.active { color: #D4AF37; background-color: #1A1A1A; border-left: 4px solid #D4AF37; }
 
-.btn-secundario {
-    background: transparent;
-    border: 1px solid #D4AF37;
-    color: #D4AF37;
-    padding: 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    transition: 0.3s;
-}
-
-.btn-secundario:hover {
-    background: #D4AF37;
-    color: #111;
-}
-
-.sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    padding: 1.5rem 0;
-}
-
-.tab-btn {
-    background: none;
-    border: none;
-    padding: 15px 25px;
-    text-align: left;
-    color: #CCC;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.3s;
-    border-left: 4px solid transparent;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.tab-btn:hover, .tab-btn.active {
-    color: #D4AF37;
-    background-color: #1A1A1A;
-    border-left: 4px solid #D4AF37;
-}
-
-/* Área de Conteúdo Principal */
-.main-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 3rem;
-    background-color: #FFF;
-}
-
-.titulo-secao {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.2rem;
-    color: #111;
-    margin-bottom: 2rem;
-    border-bottom: 2px solid #F0F0F0;
-    padding-bottom: 10px;
-}
-
+/* Main Content */
+.main-content { flex: 1; overflow-y: auto; padding: 3rem; background-color: #FFF; }
+.titulo-secao { font-size: 2.2rem; color: #111; margin-bottom: 2rem; border-bottom: 2px solid #F0F0F0; padding-bottom: 10px; }
 h3 { font-size: 1.1rem; margin-bottom: 0.8rem; color: #333; }
 
-/* Componentes Genéricos */
+/* Inputs e Forms */
 .filtro-box { background: #FAFAFA; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #EBEBEB; }
 .form-grupo { display: flex; gap: 15px; margin-bottom: 1.5rem; width: 100%; align-items: center; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
 .form-grupo div, .form-grid div { display: flex; flex-direction: column; width: 100%; }
 .form-grupo label, .form-grid label { font-size: 0.85rem; font-weight: 600; color: #555; margin-bottom: 5px; }
+input, select { padding: 12px; border: 1px solid #DDD; border-radius: 4px; background: #FFF; font-size: 0.95rem; }
 
-input, select { padding: 12px; border: 1px solid #DDD; border-radius: 4px; font-family: 'Montserrat', sans-serif; background: #FFF; }
-
+/* Botões */
 .btn-acao { background-color: #111; color: #D4AF37; border: 1px solid #111; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; transition: 0.3s; }
 .btn-acao:hover { background-color: #D4AF37; color: #111; border-color: #D4AF37; }
+.btn-secundario { background: transparent; border: 1px solid #D4AF37; color: #D4AF37; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+.btn-secundario:hover { background: #D4AF37; color: #111; }
 .btn-largo { width: 100%; font-size: 1rem; padding: 15px; margin-top: 1rem; }
 
-.grid-categorias { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-bottom: 1rem; }
-.grid-categorias label { cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+/* Tags de Filtro */
+.tags-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; margin-bottom: 10px; }
+.tag-item { background: #D4AF37; color: #111; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.tag-item span { cursor: pointer; background: #111; color: #FFF; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; justify-content: center; align-items: center; font-size: 0.7rem; }
 
-/* Cards */
+/* Cards de Busca */
 .resultados-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-.card-fornecedor { border: 1px solid #EBEBEB; border-radius: 8px; padding: 1.5rem; background: #FFF; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.3s; }
+.card-fornecedor { border: 1px solid #EBEBEB; border-radius: 8px; padding: 1.5rem; background: #FFF; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.3s; display: flex; flex-direction: column; }
 .card-fornecedor:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.08); border-color: #D4AF37; }
-.card-fornecedor h4 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 10px; color: #111; }
+.card-fornecedor h4 { font-size: 1.3rem; margin-bottom: 10px; color: #111; }
 .card-fornecedor .categoria { font-size: 0.75rem; color: #888; text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 1px;}
 .card-fornecedor .preco { font-size: 1.4rem; font-weight: 600; color: #D4AF37; margin-bottom: 10px; }
 .card-fornecedor .contato { font-size: 0.9rem; color: #666; margin-bottom: 15px; }
 
-/* Resumo Financeiro (Sem alterações estruturais) */
+.btn-card-adicionar { background-color: #111; color: #D4AF37; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: 600; margin-top: auto; }
+.btn-card-remover { background-color: #FFF; color: #c0392b; border: 1px solid #c0392b; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: 600; margin-top: auto; }
+
+/* Tabelas e Resumo */
 .configuracao-orcamento { background: #FAFAFA; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #EBEBEB; }
 .resumo-financeiro { display: flex; gap: 15px; margin-bottom: 2rem; text-align: center; }
 .card-valor { flex: 1; background: #FFF; padding: 1.5rem; border-radius: 8px; border: 1px solid #EBEBEB; }
 .card-valor span { font-size: 0.8rem; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-.card-valor h3 { margin-top: 10px; font-size: 1.6rem; color: #111; }
+.card-valor h3 { margin-top: 10px; font-size: 1.6rem; color: #111; font-family: 'Playfair Display', serif;}
 .saldo-positivo { color: #27ae60 !important; }
 .saldo-negativo { color: #c0392b !important; }
 
-/* Tabelas e Select de Status */
 table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; background: #FFF; }
 th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #EBEBEB; }
 th { background-color: #FAFAFA; color: #111; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
 .btn-remover { background: #c0392b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;}
 
-/* Cores de Status (Confirmado, Pendente, Ausente) */
+/* Status */
 .select-status { padding: 8px; border-radius: 4px; border: 1px solid #EBEBEB; font-weight: 600; outline: none; width: 130px; font-size: 0.85rem;}
 .status-pendente { background-color: #fcf3cf; color: #b7950b; }
 .status-confirmado { background-color: #d5f5e3; color: #1e8449; }

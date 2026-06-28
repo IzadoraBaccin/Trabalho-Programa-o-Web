@@ -15,20 +15,10 @@
                 <h2>Elegance Planner</h2>
             </div>
             
-            <div class="perfil-selector">
+            <div class="perfil-selector" id="boxSeletorProjetos">
                 <label for="projetoAtual">Gestão do Casamento:</label>
                 <select id="projetoAtual" onchange="mudarProjeto()">
-                    <option value="lucas_camila">Lucas e Camila</option>
-                    <option value="gabriel_joice">Gabriel e Joice</option>
-                    <option value="aline_carlos">Aline e Carlos</option>
-                    <option value="guilherme_junior">Guilherme e Junior</option>
-                    <option value="brenda_camila">Brenda e Camila</option>
-                </select>
-                
-                <div class="sidebar-acoes">
-                    <button onclick="adicionarNovoCasal()" class="btn-secundario">+ Adicionar Casal</button>
-                    <button onclick="modoNoivos()" class="btn-secundario">Sou Noivo(a) / Meu Casamento</button>
-                </div>
+                    </select>
             </div>
 
             <nav class="sidebar-nav">
@@ -36,42 +26,56 @@
                 <button class="tab-btn" onclick="abrirAba(event, 'orcamento')">Painel Financeiro</button>
                 <button class="tab-btn" onclick="abrirAba(event, 'convidados')">Lista de Convidados</button>
                 <button class="tab-btn" onclick="abrirAba(event, 'cronograma')">Cronograma do Dia</button>
+                <button class="tab-btn" style="margin-top: 2rem; border-top: 1px solid #333;" onclick="abrirAba(event, 'perfil')">⚙️ Perfil e Conta</button>
             </nav>
         </aside>
 
         <main class="main-content">
             
             <section id="busca" class="aba active">
-                <h2 class="titulo-secao">Configurações e Fornecedores</h2>
+                <h2 class="titulo-secao">Configurações do Evento e Buscas</h2>
                 
                 <div class="filtro-box configuracoes-iniciais">
                     <h3>Dados Básicos do Evento</h3>
-                    <div class="form-grupo form-grid">
+                    <div class="form-grid">
                         <div>
                             <label>Orçamento Disponível:</label>
-                            <input type="text" id="orcamentoBusca" oninput="aplicarMascaraMoeda(event)" placeholder="R$ 0,00">
+                            <input type="text" id="orcamentoBusca" oninput="aplicarMascaraMoeda(event)" onchange="salvarOrcamentoInicial()" placeholder="R$ 0,00">
                         </div>
                         <div>
                             <label>Data do Casamento:</label>
                             <input type="date" id="dataCasamento" onchange="salvarDataCasamento()">
                         </div>
+                        <div>
+                            <label>Nº de Convidados Previstos:</label>
+                            <input type="number" id="qtdConvidadosInicio" onchange="salvarQtdConvidadosInicio()" placeholder="Ex: 150">
+                        </div>
                     </div>
 
-                    <h3 style="margin-top: 1.5rem;">O que você procura?</h3>
-                    <div class="grid-categorias">
-                        <label><input type="checkbox" value="Buffet" class="check-categoria"> Buffet</label>
-                        <label><input type="checkbox" value="Salão de Festa" class="check-categoria"> Salão de Festa</label>
-                        <label><input type="checkbox" value="Chácara" class="check-categoria"> Chácara</label>
-                        <label><input type="checkbox" value="Decoração" class="check-categoria"> Decoração</label>
-                        <label><input type="checkbox" value="Cerimonialista" class="check-categoria"> Cerimonialista</label>
-                        <label><input type="checkbox" value="Beleza" class="check-categoria"> Beleza / Dia da Noiva</label>
-                        <label><input type="checkbox" value="Vestido" class="check-categoria"> Trajes</label>
-                        <label><input type="checkbox" value="Doceria" class="check-categoria"> Doceria</label>
-                        <label><input type="checkbox" value="Drinks" class="check-categoria"> Bar de Drinks</label>
-                        <label><input type="checkbox" value="Fotografia" class="check-categoria"> Fotografia</label>
+                    <h3 style="margin-top: 2rem;">O que você precisa para a festa?</h3>
+                    <div class="form-grupo" style="align-items: flex-end;">
+                        <div style="flex: 2;">
+                            <label>Digite ou selecione um serviço (Ex: Buffet, Decoração):</label>
+                            <input type="text" id="inputBuscaServico" list="listaServicos" placeholder="Escolha um serviço...">
+                            <datalist id="listaServicos">
+                                <option value="Buffet">
+                                <option value="Salão de Festa">
+                                <option value="Chácara">
+                                <option value="Decoração">
+                                <option value="Cerimonialista">
+                                <option value="Beleza">
+                                <option value="Vestido">
+                                <option value="Doceria">
+                                <option value="Drinks">
+                                <option value="Fotografia">
+                            </datalist>
+                        </div>
+                        <button onclick="adicionarFiltroServico()" class="btn-secundario" style="height: 43px; padding: 0 20px;">+ Adicionar</button>
                     </div>
+                    
+                    <div id="tagsFiltro" class="tags-container"></div>
 
-                    <button onclick="buscarFornecedores()" class="btn-acao btn-largo">Pesquisar Fornecedores Compatíveis</button>
+                    <button onclick="buscarFornecedores()" class="btn-acao btn-largo" style="margin-top: 1.5rem;">Pesquisar Fornecedores</button>
                 </div>
 
                 <div id="resultadosBusca" class="resultados-grid"></div>
@@ -83,11 +87,11 @@
                     <div class="form-grupo">
                         <div>
                             <label>Orçamento Total Previsto (R$):</label>
-                            <input type="number" id="inputOrcamentoTotal" onchange="salvarConfiguracoesCasal()" placeholder="Ex: 50000">
+                            <input type="number" id="inputOrcamentoTotal" onchange="salvarConfiguracoesCasalFinanceiro()" placeholder="Ex: 50000">
                         </div>
                         <div>
                             <label>Estimativa de Convidados (Qtd):</label>
-                            <input type="number" id="inputQtdConvidados" onchange="salvarConfiguracoesCasal()" placeholder="Ex: 150">
+                            <input type="number" id="inputQtdConvidados" onchange="salvarConfiguracoesCasalFinanceiro()" placeholder="Ex: 150">
                         </div>
                     </div>
                 </div>
@@ -156,6 +160,49 @@
                     <li><strong>19:00</strong> - Abertura da pista de dança e jantar</li>
                 </ul>
             </section>
+
+            <section id="perfil" class="aba" style="display:none;">
+                <h2 class="titulo-secao">Configuração de Perfil</h2>
+                
+                <div class="filtro-box">
+                    <h3>Dados da Conta</h3>
+                    <div class="form-grid">
+                        <div>
+                            <label>Nome Completo:</label>
+                            <input type="text" id="perfilNome" placeholder="Seu nome">
+                        </div>
+                        <div>
+                            <label>E-mail:</label>
+                            <input type="email" id="perfilEmail" placeholder="seu@email.com">
+                        </div>
+                        <div>
+                            <label>CPF:</label>
+                            <input type="text" id="perfilCpf" placeholder="000.000.000-00">
+                        </div>
+                        <div>
+                            <label>Tipo de Conta:</label>
+                            <select id="perfilTipo" onchange="alterarTipoConta()">
+                                <option value="cerimonialista">Cerimonialista / Montador</option>
+                                <option value="noivos">Sou Noiva / Noivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-acao" style="margin-top: 1rem;" onclick="salvarPerfil()">Salvar Perfil</button>
+                </div>
+
+                <div id="areaGestaoProjetos" class="filtro-box">
+                    <h3>Gestão de Casamentos (Projetos)</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">Como cerimonialista, adicione aqui os casais que você está atendendo:</p>
+                    <div class="form-grupo" style="align-items: flex-end;">
+                        <div style="flex: 2;">
+                            <label>Nome dos Noivos (Ex: Lucas e Camila):</label>
+                            <input type="text" id="novoProjetoNome" placeholder="Digite os nomes...">
+                        </div>
+                        <button class="btn-acao" style="height: 45px; padding: 0 20px;" onclick="criarNovoProjeto()">Criar Projeto</button>
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 

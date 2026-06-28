@@ -1,3 +1,4 @@
+// Base de dados simulada
 const bancoFornecedores = [
     { id: 1, nome: "Buffet Sabor Nobre", categoria: "Buffet", preco: 8500, contato: "(11) 98888-1111" },
     { id: 2, nome: "Palácio das Festas", categoria: "Salão de Festa", preco: 5000, contato: "(11) 98888-2222" },
@@ -11,22 +12,99 @@ const bancoFornecedores = [
     { id: 10, nome: "Focus Fotografia", categoria: "Fotografia", preco: 3000, contato: "(11) 98888-0000" }
 ];
 
-let dadosCasais = {
-    "lucas_camila": { orcamentoTotal: 40000, qtdConvidados: 150, dataCasamento: "", fornecedores: [], convidados: [] },
-    "gabriel_joice": { orcamentoTotal: 25000, qtdConvidados: 80, dataCasamento: "", fornecedores: [], convidados: [] },
-    "aline_carlos": { orcamentoTotal: 60000, qtdConvidados: 200, dataCasamento: "", fornecedores: [], convidados: [] },
-    "guilherme_junior": { orcamentoTotal: 30000, qtdConvidados: 100, dataCasamento: "", fornecedores: [], convidados: [] },
-    "brenda_camila": { orcamentoTotal: 45000, qtdConvidados: 120, dataCasamento: "", fornecedores: [], convidados: [] }
-};
+let dadosCasais = {};
+let casalAtual = "";
+let filtrosSelecionados = [];
 
-let casalAtual = "lucas_camila";
-
+// ==========================================
+// INICIALIZAÇÃO
+// ==========================================
 window.onload = function() {
+    // Cria projetos padrão para o exemplo
+    dadosCasais = {
+        "lucas_camila": { nomeProjeto: "Lucas e Camila", orcamentoTotal: 40000, qtdConvidados: 150, dataCasamento: "", fornecedores: [], convidados: [] },
+        "gabriel_joice": { nomeProjeto: "Gabriel e Joice", orcamentoTotal: 25000, qtdConvidados: 80, dataCasamento: "", fornecedores: [], convidados: [] }
+    };
+    atualizarSelectProjetos();
+    casalAtual = "lucas_camila";
     carregarDadosDoCasal();
 };
 
+function abrirAba(evento, nomeAba) {
+    let abas = document.getElementsByClassName("aba");
+    for (let i = 0; i < abas.length; i++) abas[i].style.display = "none";
+    let botoes = document.getElementsByClassName("tab-btn");
+    for (let i = 0; i < botoes.length; i++) botoes[i].className = botoes[i].className.replace(" active", "");
+    document.getElementById(nomeAba).style.display = "block";
+    evento.currentTarget.className += " active";
+}
+
 // ==========================================
-// MÁSCARA E FORMATAÇÃO DE MOEDA
+// ABA PERFIL E GESTÃO DE PROJETOS
+// ==========================================
+function alterarTipoConta() {
+    let tipo = document.getElementById("perfilTipo").value;
+    let boxProjetos = document.getElementById("areaGestaoProjetos");
+    let boxSeletor = document.getElementById("boxSeletorProjetos");
+    
+    if(tipo === "noivos") {
+        boxProjetos.style.display = "none";
+        boxSeletor.style.display = "none";
+        
+        // Se for noivos, usa apenas 1 projeto interno
+        dadosCasais = { "meu_casamento": { nomeProjeto: "Meu Casamento", orcamentoTotal: 0, qtdConvidados: 0, dataCasamento: "", fornecedores: [], convidados: [] }};
+        casalAtual = "meu_casamento";
+        carregarDadosDoCasal();
+    } else {
+        boxProjetos.style.display = "block";
+        boxSeletor.style.display = "block";
+        // Restaura projetos vazios de exemplo
+        dadosCasais = {};
+        atualizarSelectProjetos();
+    }
+}
+
+function salvarPerfil() {
+    let nome = document.getElementById("perfilNome").value;
+    if(nome) alert("Perfil de " + nome + " salvo com sucesso!");
+}
+
+function criarNovoProjeto() {
+    let nome = document.getElementById("novoProjetoNome").value;
+    if(!nome) return;
+
+    let idGerado = nome.toLowerCase().replace(/[^a-z0-9]/g, "_");
+    if(!dadosCasais[idGerado]) {
+        dadosCasais[idGerado] = { nomeProjeto: nome, orcamentoTotal: 0, qtdConvidados: 0, dataCasamento: "", fornecedores: [], convidados: [] };
+        atualizarSelectProjetos();
+        document.getElementById("projetoAtual").value = idGerado;
+        mudarProjeto();
+    }
+    document.getElementById("novoProjetoNome").value = "";
+    alert("Projeto criado!");
+}
+
+function atualizarSelectProjetos() {
+    let select = document.getElementById("projetoAtual");
+    select.innerHTML = "";
+    for (const [id, dados] of Object.entries(dadosCasais)) {
+        let opt = document.createElement("option");
+        opt.value = id;
+        opt.text = dados.nomeProjeto;
+        select.appendChild(opt);
+    }
+}
+
+function mudarProjeto() {
+    casalAtual = document.getElementById("projetoAtual").value;
+    document.getElementById("resultadosBusca").innerHTML = ""; 
+    filtrosSelecionados = [];
+    renderizarTagsFiltro();
+    carregarDadosDoCasal();
+}
+
+// ==========================================
+// MÁSCARA E SINCRONIZAÇÃO DE DADOS BÁSICOS
 // ==========================================
 function aplicarMascaraMoeda(event) {
     let valor = event.target.value.replace(/\D/g, '');
@@ -37,136 +115,148 @@ function aplicarMascaraMoeda(event) {
     event.target.value = "R$ " + valor;
 }
 
-function reverterMascaraParaNumero(valorApresentado) {
-    if(!valorApresentado) return 0;
-    let semLetras = valorApresentado.replace("R$ ", "").replace(/\./g, "").replace(",", ".");
-    return parseFloat(semLetras) || 0;
-}
-
-// ==========================================
-// NAVEGAÇÃO E PERFIS
-// ==========================================
-function abrirAba(evento, nomeAba) {
-    let abas = document.getElementsByClassName("aba");
-    for (let i = 0; i < abas.length; i++) abas[i].style.display = "none";
-    let botoes = document.getElementsByClassName("tab-btn");
-    for (let i = 0; i < botoes.length; i++) botoes[i].className = botoes[i].className.replace(" active", "");
-    document.getElementById(nomeAba).style.display = "block";
-    evento.currentTarget.className += " active";
-}
-
-function mudarProjeto() {
-    casalAtual = document.getElementById("projetoAtual").value;
-    document.getElementById("resultadosBusca").innerHTML = ""; 
-    carregarDadosDoCasal();
-}
-
-function adicionarNovoCasal() {
-    let nome = prompt("Digite o nome dos noivos (Ex: João e Maria):");
-    if(nome) criarPerfilCasal(nome);
-}
-
-function modoNoivos() {
-    criarPerfilCasal("Meu Casamento (Noivos)");
-}
-
-function criarPerfilCasal(nomeFormatado) {
-    let idGerado = nomeFormatado.toLowerCase().replace(/[^a-z0-9]/g, "_");
-    
-    // Evita duplicidade
-    if(!dadosCasais[idGerado]) {
-        dadosCasais[idGerado] = { orcamentoTotal: 0, qtdConvidados: 0, dataCasamento: "", fornecedores: [], convidados: [] };
-        
-        let select = document.getElementById("projetoAtual");
-        let option = document.createElement("option");
-        option.text = nomeFormatado;
-        option.value = idGerado;
-        select.add(option);
-    }
-    
-    document.getElementById("projetoAtual").value = idGerado;
-    mudarProjeto();
+function reverterMoeda(valorStr) {
+    if(!valorStr) return 0;
+    return parseFloat(valorStr.replace("R$ ", "").replace(/\./g, "").replace(",", ".")) || 0;
 }
 
 function carregarDadosDoCasal() {
     let dados = dadosCasais[casalAtual];
+    
+    // Inputs da Aba Orçamento (Painel)
     document.getElementById("inputOrcamentoTotal").value = dados.orcamentoTotal || "";
     document.getElementById("inputQtdConvidados").value = dados.qtdConvidados || "";
     
-    // Preenche campo de data no Início
+    // Inputs da Aba Início (Sincronizados)
+    let valorReais = dados.orcamentoTotal > 0 ? "R$ " + dados.orcamentoTotal.toFixed(2).replace(".", ",").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.") : "";
+    document.getElementById("orcamentoBusca").value = valorReais;
+    document.getElementById("qtdConvidadosInicio").value = dados.qtdConvidados || "";
     document.getElementById("dataCasamento").value = dados.dataCasamento || "";
     
     atualizarPainelOrcamento();
     atualizarTabelaConvidados();
 }
 
+function salvarOrcamentoInicial() {
+    let val = reverterMoeda(document.getElementById("orcamentoBusca").value);
+    dadosCasais[casalAtual].orcamentoTotal = val;
+    document.getElementById("inputOrcamentoTotal").value = val;
+    atualizarPainelOrcamento();
+}
+
+function salvarQtdConvidadosInicio() {
+    let qtd = document.getElementById("qtdConvidadosInicio").value;
+    dadosCasais[casalAtual].qtdConvidados = parseInt(qtd) || 0;
+    document.getElementById("inputQtdConvidados").value = qtd;
+    atualizarPainelOrcamento();
+}
+
 function salvarDataCasamento() {
     dadosCasais[casalAtual].dataCasamento = document.getElementById("dataCasamento").value;
 }
 
-function salvarConfiguracoesCasal() {
-    let orcamento = document.getElementById("inputOrcamentoTotal").value;
+function salvarConfiguracoesCasalFinanceiro() {
+    let orc = document.getElementById("inputOrcamentoTotal").value;
     let qtd = document.getElementById("inputQtdConvidados").value;
-    dadosCasais[casalAtual].orcamentoTotal = parseFloat(orcamento) || 0;
+    
+    dadosCasais[casalAtual].orcamentoTotal = parseFloat(orc) || 0;
     dadosCasais[casalAtual].qtdConvidados = parseInt(qtd) || 0;
-    atualizarPainelOrcamento();
+    
+    carregarDadosDoCasal(); // Força atualização dos campos na aba inicial
 }
 
 // ==========================================
-// ABA BUSCA / INÍCIO
+// SISTEMA DE TAGS E BUSCA
 // ==========================================
-function buscarFornecedores() {
-    let inputOrcamento = document.getElementById("orcamentoBusca").value;
-    let maxBusca = reverterMascaraParaNumero(inputOrcamento);
-    let divResultados = document.getElementById("resultadosBusca");
-    
-    let checkboxes = document.querySelectorAll(".check-categoria:checked");
-    let categoriasSelecionadas = Array.from(checkboxes).map(cb => cb.value);
+function adicionarFiltroServico() {
+    let servico = document.getElementById("inputBuscaServico").value.trim();
+    if (servico !== "" && !filtrosSelecionados.includes(servico)) {
+        filtrosSelecionados.push(servico);
+        renderizarTagsFiltro();
+    }
+    document.getElementById("inputBuscaServico").value = "";
+}
 
-    if (maxBusca <= 0 || categoriasSelecionadas.length === 0) {
-        alert("Preencha um orçamento válido e selecione pelo menos um serviço.");
+function removerTagFiltro(index) {
+    filtrosSelecionados.splice(index, 1);
+    renderizarTagsFiltro();
+}
+
+function renderizarTagsFiltro() {
+    let container = document.getElementById("tagsFiltro");
+    container.innerHTML = "";
+    filtrosSelecionados.forEach((filtro, index) => {
+        container.innerHTML += `
+            <div class="tag-item">
+                ${filtro} <span onclick="removerTagFiltro(${index})">X</span>
+            </div>
+        `;
+    });
+}
+
+function buscarFornecedores() {
+    let maxBusca = dadosCasais[casalAtual].orcamentoTotal;
+    let divResultados = document.getElementById("resultadosBusca");
+
+    if (maxBusca <= 0) {
+        alert("Defina o orçamento disponível antes de buscar.");
+        return;
+    }
+
+    if (filtrosSelecionados.length === 0) {
+        alert("Adicione pelo menos um serviço na lista para filtrar.");
         return;
     }
 
     let resultados = bancoFornecedores.filter(forn => 
-        categoriasSelecionadas.includes(forn.categoria) && forn.preco <= maxBusca
+        filtrosSelecionados.includes(forn.categoria) && forn.preco <= maxBusca
     );
 
     divResultados.innerHTML = ""; 
     if (resultados.length === 0) {
-        divResultados.innerHTML = "<p>Nenhum fornecedor compatível com este valor e filtro.</p>";
+        divResultados.innerHTML = "<p style='color:#666;'>Nenhum fornecedor encontrado que atenda a este orçamento e filtros.</p>";
         return;
     }
 
+    // Renderiza os Cards com lógica condicional Adicionar/Remover
     resultados.forEach(forn => {
+        let jaAdicionado = dadosCasais[casalAtual].fornecedores.some(f => f.id === forn.id);
+        
+        let botaoHtml = jaAdicionado 
+            ? `<button class="btn-card-remover" onclick="removerDoOrcamentoPeloCard(${forn.id})">- Remover do Projeto</button>`
+            : `<button class="btn-card-adicionar" onclick="adicionarAoOrcamentoPeloCard(${forn.id})">+ Adicionar ao Projeto</button>`;
+
         divResultados.innerHTML += `
             <div class="card-fornecedor">
                 <span class="categoria">${forn.categoria}</span>
                 <h4>${forn.nome}</h4>
                 <div class="preco">R$ ${forn.preco.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
                 <div class="contato">📞 ${forn.contato}</div>
-                <button class="btn-acao" style="padding: 8px 15px; font-size:0.85rem;" onclick="adicionarAoOrcamento(${forn.id})">Adicionar Projeto</button>
+                ${botaoHtml}
             </div>
         `;
     });
 }
 
-function adicionarAoOrcamento(idFornecedor) {
+function adicionarAoOrcamentoPeloCard(idFornecedor) {
     let fornecedor = bancoFornecedores.find(f => f.id === idFornecedor);
-    if(dadosCasais[casalAtual].fornecedores.find(f => f.id === idFornecedor)) {
-        alert("Fornecedor já cadastrado no orçamento deste casal!");
-        return;
-    }
     dadosCasais[casalAtual].fornecedores.push(fornecedor);
-    alert(fornecedor.nome + " salvo com sucesso!");
     atualizarPainelOrcamento();
+    buscarFornecedores(); // Recarrega os botões da busca
 }
 
-function removerDoOrcamento(index) {
-    dadosCasais[casalAtual].fornecedores.splice(index, 1);
-    atualizarPainelOrcamento();
+function removerDoOrcamentoPeloCard(idFornecedor) {
+    let index = dadosCasais[casalAtual].fornecedores.findIndex(f => f.id === idFornecedor);
+    if(index !== -1) {
+        dadosCasais[casalAtual].fornecedores.splice(index, 1);
+        atualizarPainelOrcamento();
+        buscarFornecedores(); // Recarrega os botões da busca
+    }
 }
 
+// ==========================================
+// ABA ORÇAMENTO (PAINEL FINANCEIRO)
+// ==========================================
 function atualizarPainelOrcamento() {
     let dados = dadosCasais[casalAtual];
     let totalGasto = dados.fornecedores.reduce((soma, forn) => soma + forn.preco, 0);
@@ -189,14 +279,22 @@ function atualizarPainelOrcamento() {
                 <td>${forn.categoria}</td>
                 <td>${forn.nome}</td>
                 <td>R$ ${forn.preco.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                <td><button class="btn-remover" onclick="removerDoOrcamento(${index})">Remover</button></td>
+                <td><button class="btn-remover" onclick="removerDoOrcamentoNaTabela(${index})">Remover</button></td>
             </tr>
         `;
     });
 }
 
+function removerDoOrcamentoNaTabela(index) {
+    dadosCasais[casalAtual].fornecedores.splice(index, 1);
+    atualizarPainelOrcamento();
+    // Atualiza a visualização da busca caso ela esteja aberta
+    let divResultados = document.getElementById("resultadosBusca");
+    if(divResultados.innerHTML !== "") buscarFornecedores();
+}
+
 // ==========================================
-// ABA CONVIDADOS (Pendente, Confirmado, Ausente)
+// ABA CONVIDADOS
 // ==========================================
 function adicionarConvidado() {
     let nome = document.getElementById("nomeConvidado").value;
@@ -214,7 +312,6 @@ function atualizarTabelaConvidados() {
     tbody.innerHTML = ""; 
 
     dadosCasais[casalAtual].convidados.forEach((convidado, index) => {
-        // Cores com base no novo status
         let corClasse = convidado.status === "Pendente" ? "status-pendente" : 
                         convidado.status === "Confirmado" ? "status-confirmado" : "status-ausente";
 
