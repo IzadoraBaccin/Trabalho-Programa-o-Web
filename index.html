@@ -1,199 +1,164 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nosso Casamento | Organização Inteligente</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-      <h1>Organizador de Casamento</h1>
-      <p>Encontre fornecedores e planeje o seu grande dia</p>
-    </header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizador de Casamentos Elegance</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+</head>
+<body>
 
-    <nav>
-      <button class="tab-btn active" onclick="abrirAba(event, 'busca')">
-        Buscar Fornecedores
-      </button>
-      <button class="tab-btn" onclick="abrirAba(event, 'orcamento')">
-        Meu Orçamento
-      </button>
-      <button class="tab-btn" onclick="abrirAba(event, 'convidados')">
-        Convidados
-      </button>
-      <button class="tab-btn" onclick="abrirAba(event, 'cronograma')">
-        Cronograma
-      </button>
-    </nav>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Elegance Planner</h2>
+            </div>
+            
+            <div class="perfil-selector">
+                <label for="projetoAtual">Gestão do Casamento:</label>
+                <select id="projetoAtual" onchange="mudarProjeto()">
+                    <option value="lucas_camila">Lucas e Camila</option>
+                    <option value="gabriel_joice">Gabriel e Joice</option>
+                    <option value="aline_carlos">Aline e Carlos</option>
+                    <option value="guilherme_junior">Guilherme e Junior</option>
+                    <option value="brenda_camila">Brenda e Camila</option>
+                </select>
+                
+                <div class="sidebar-acoes">
+                    <button onclick="adicionarNovoCasal()" class="btn-secundario">+ Adicionar Casal</button>
+                    <button onclick="modoNoivos()" class="btn-secundario">Sou Noivo(a) / Meu Casamento</button>
+                </div>
+            </div>
 
-    <main class="container">
-      <!-- ABA: BUSCA DE FORNECEDORES -->
-      <section id="busca" class="aba active">
-        <h2>Encontre seus Fornecedores</h2>
+            <nav class="sidebar-nav">
+                <button class="tab-btn active" onclick="abrirAba(event, 'busca')">Início e Buscas</button>
+                <button class="tab-btn" onclick="abrirAba(event, 'orcamento')">Painel Financeiro</button>
+                <button class="tab-btn" onclick="abrirAba(event, 'convidados')">Lista de Convidados</button>
+                <button class="tab-btn" onclick="abrirAba(event, 'cronograma')">Cronograma do Dia</button>
+            </nav>
+        </aside>
 
-        <div class="filtro-box">
-          <h3>1. Qual o seu orçamento total?</h3>
-          <div class="form-grupo">
-            <input
-              type="number"
-              id="orcamentoMin"
-              placeholder="Mínimo (Ex: 15000)"
-            />
-            <input
-              type="number"
-              id="orcamentoMax"
-              placeholder="Máximo (Ex: 30000)"
-            />
-          </div>
+        <main class="main-content">
+            
+            <section id="busca" class="aba active">
+                <h2 class="titulo-secao">Configurações e Fornecedores</h2>
+                
+                <div class="filtro-box configuracoes-iniciais">
+                    <h3>Dados Básicos do Evento</h3>
+                    <div class="form-grupo form-grid">
+                        <div>
+                            <label>Orçamento Disponível:</label>
+                            <input type="text" id="orcamentoBusca" oninput="aplicarMascaraMoeda(event)" placeholder="R$ 0,00">
+                        </div>
+                        <div>
+                            <label>Data do Casamento:</label>
+                            <input type="date" id="dataCasamento" onchange="salvarDataCasamento()">
+                        </div>
+                    </div>
 
-          <h3>2. O que você precisa?</h3>
-          <div class="grid-categorias">
-            <label
-              ><input type="checkbox" value="Buffet" class="check-categoria" />
-              Buffet</label
-            >
-            <label
-              ><input
-                type="checkbox"
-                value="Salão de Festa"
-                class="check-categoria"
-              />
-              Salão de Festa</label
-            >
-            <label
-              ><input type="checkbox" value="Chácara" class="check-categoria" />
-              Chácara</label
-            >
-            <label
-              ><input
-                type="checkbox"
-                value="Decoração"
-                class="check-categoria"
-              />
-              Decoração</label
-            >
-            <label
-              ><input
-                type="checkbox"
-                value="Cerimonialista"
-                class="check-categoria"
-              />
-              Cerimonialista</label
-            >
-            <label
-              ><input type="checkbox" value="Beleza" class="check-categoria" />
-              Salão de Beleza</label
-            >
-            <label
-              ><input type="checkbox" value="Vestido" class="check-categoria" />
-              Aluguel de Vestido</label
-            >
-            <label
-              ><input type="checkbox" value="Doceria" class="check-categoria" />
-              Doceria</label
-            >
-            <label
-              ><input type="checkbox" value="Drinks" class="check-categoria" />
-              Bar de Drinks</label
-            >
-            <label
-              ><input
-                type="checkbox"
-                value="Fotografia"
-                class="check-categoria"
-              />
-              Fotografia</label
-            >
-          </div>
+                    <h3 style="margin-top: 1.5rem;">O que você procura?</h3>
+                    <div class="grid-categorias">
+                        <label><input type="checkbox" value="Buffet" class="check-categoria"> Buffet</label>
+                        <label><input type="checkbox" value="Salão de Festa" class="check-categoria"> Salão de Festa</label>
+                        <label><input type="checkbox" value="Chácara" class="check-categoria"> Chácara</label>
+                        <label><input type="checkbox" value="Decoração" class="check-categoria"> Decoração</label>
+                        <label><input type="checkbox" value="Cerimonialista" class="check-categoria"> Cerimonialista</label>
+                        <label><input type="checkbox" value="Beleza" class="check-categoria"> Beleza / Dia da Noiva</label>
+                        <label><input type="checkbox" value="Vestido" class="check-categoria"> Trajes</label>
+                        <label><input type="checkbox" value="Doceria" class="check-categoria"> Doceria</label>
+                        <label><input type="checkbox" value="Drinks" class="check-categoria"> Bar de Drinks</label>
+                        <label><input type="checkbox" value="Fotografia" class="check-categoria"> Fotografia</label>
+                    </div>
 
-          <button onclick="buscarFornecedores()" class="btn-acao btn-largo">
-            Buscar Fornecedores
-          </button>
-        </div>
+                    <button onclick="buscarFornecedores()" class="btn-acao btn-largo">Pesquisar Fornecedores Compatíveis</button>
+                </div>
 
-        <div id="resultadosBusca" class="resultados-grid">
-          <!-- Os cards de fornecedores aparecerão aqui -->
-        </div>
-      </section>
+                <div id="resultadosBusca" class="resultados-grid"></div>
+            </section>
 
-      <!-- ABA: MEU ORÇAMENTO -->
-      <section id="orcamento" class="aba" style="display: none">
-        <h2>Resumo do Orçamento</h2>
+            <section id="orcamento" class="aba" style="display:none;">
+                <h2 class="titulo-secao">Painel Financeiro do Casal</h2>
+                <div class="configuracao-orcamento">
+                    <div class="form-grupo">
+                        <div>
+                            <label>Orçamento Total Previsto (R$):</label>
+                            <input type="number" id="inputOrcamentoTotal" onchange="salvarConfiguracoesCasal()" placeholder="Ex: 50000">
+                        </div>
+                        <div>
+                            <label>Estimativa de Convidados (Qtd):</label>
+                            <input type="number" id="inputQtdConvidados" onchange="salvarConfiguracoesCasal()" placeholder="Ex: 150">
+                        </div>
+                    </div>
+                </div>
+                <div class="resumo-financeiro">
+                    <div class="card-valor">
+                        <span>Total Gasto:</span>
+                        <h3 id="displayTotalGasto">R$ 0,00</h3>
+                    </div>
+                    <div class="card-valor" id="cardSaldo">
+                        <span>Saldo Restante:</span>
+                        <h3 id="displaySaldo">R$ 0,00</h3>
+                    </div>
+                    <div class="card-valor">
+                        <span>Custo por Convidado:</span>
+                        <h3 id="displayCustoPorConvidado">R$ 0,00</h3>
+                    </div>
+                </div>
+                <table id="tabelaOrcamento">
+                    <thead>
+                        <tr><th>Serviço</th><th>Empresa</th><th>Valor</th><th>Ação</th></tr>
+                    </thead>
+                    <tbody id="listaOrcamento"></tbody>
+                </table>
+            </section>
 
-        <div class="resumo-financeiro">
-          <div class="card-valor">
-            <span>Orçamento Disponível:</span>
-            <h3 id="displayOrcamentoMax">R$ 0,00</h3>
-          </div>
-          <div class="card-valor">
-            <span>Total Gasto:</span>
-            <h3 id="displayTotalGasto">R$ 0,00</h3>
-          </div>
-          <div class="card-valor" id="cardSaldo">
-            <span>Saldo Restante:</span>
-            <h3 id="displaySaldo">R$ 0,00</h3>
-          </div>
-        </div>
+            <section id="convidados" class="aba" style="display:none;">
+                <h2 class="titulo-secao">Gestão de Convidados</h2>
+                <div class="filtro-box">
+                    <div class="form-grupo" style="margin-bottom:0;">
+                        <div>
+                            <label>Nome do Convidado:</label>
+                            <input type="text" id="nomeConvidado" placeholder="Ex: Tio João">
+                        </div>
+                        <div>
+                            <label>Grupo:</label>
+                            <select id="grupoConvidado">
+                                <option value="Família da Noiva">Família da Noiva</option>
+                                <option value="Família do Noivo">Família do Noivo</option>
+                                <option value="Amigos">Amigos</option>
+                                <option value="Trabalho">Trabalho</option>
+                            </select>
+                        </div>
+                        <button onclick="adicionarConvidado()" class="btn-acao" style="height: 45px; align-self: flex-end;">Adicionar</button>
+                    </div>
+                </div>
+                <table id="tabelaConvidados">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Grupo</th>
+                            <th>Status de Confirmação</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaConvidadosTabela"></tbody>
+                </table>
+            </section>
 
-        <table id="tabelaOrcamento">
-          <thead>
-            <tr>
-              <th>Serviço</th>
-              <th>Empresa</th>
-              <th>Valor</th>
-              <th>Ação</th>
-            </tr>
-          </thead>
-          <tbody id="listaOrcamento">
-            <!-- Fornecedores escolhidos vão aqui -->
-          </tbody>
-        </table>
-      </section>
-
-      <!-- ABA: CONVIDADOS -->
-      <section id="convidados" class="aba" style="display: none">
-        <h2>Lista de Convidados</h2>
-        <div class="form-grupo">
-          <input
-            type="text"
-            id="nomeConvidado"
-            placeholder="Nome do convidado"
-          />
-          <select id="grupoConvidado">
-            <option value="Família">Família</option>
-            <option value="Amigos">Amigos</option>
-            <option value="Trabalho">Trabalho</option>
-          </select>
-          <button onclick="adicionarConvidado()" class="btn-acao">
-            Adicionar
-          </button>
-        </div>
-        <table id="tabelaConvidados">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Grupo</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </section>
-
-      <!-- ABA: CRONOGRAMA -->
-      <section id="cronograma" class="aba" style="display: none">
-        <h2>Cronograma do Grande Dia</h2>
-        <ul class="linha-do-tempo">
-          <li><strong>14:00</strong> - Chegada no local para preparação</li>
-          <li><strong>16:30</strong> - Chegada dos convidados</li>
-          <li><strong>17:00</strong> - Início da Cerimônia</li>
-          <li><strong>18:30</strong> - Sessão de fotos</li>
-          <li><strong>19:00</strong> - Abertura da pista de dança e jantar</li>
-        </ul>
-      </section>
-    </main>
+            <section id="cronograma" class="aba" style="display:none;">
+                <h2 class="titulo-secao">Cronograma Padrão do Grande Dia</h2>
+                <ul class="linha-do-tempo">
+                    <li><strong>14:00</strong> - Chegada no local para preparação</li>
+                    <li><strong>16:30</strong> - Chegada dos convidados</li>
+                    <li><strong>17:00</strong> - Início da Cerimônia</li>
+                    <li><strong>18:30</strong> - Sessão de fotos</li>
+                    <li><strong>19:00</strong> - Abertura da pista de dança e jantar</li>
+                </ul>
+            </section>
+        </main>
+    </div>
 
     <script src="script.js"></script>
-  </body>
+</body>
 </html>
