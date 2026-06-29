@@ -3,16 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizador de Casamentos Elegance</title>
+    <title>My Wedding Organize</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="app-layout">
+    <div id="telaLogin" class="tela-login">
+        <div class="login-box">
+            <h1 style="font-family: 'Playfair Display', serif; color: #D4AF37; margin-bottom: 5px;">My Wedding Organize</h1>
+            <p style="color: #666; margin-bottom: 2rem; font-size: 0.9rem;">Crie seu perfil para começar a organizar.</p>
+            
+            <div class="form-grupo" style="flex-direction: column; gap: 15px;">
+                <div style="width: 100%;">
+                    <label>Nome Completo:</label>
+                    <input type="text" id="loginNome" placeholder="Seu nome">
+                </div>
+                <div style="width: 100%;">
+                    <label>E-mail:</label>
+                    <input type="email" id="loginEmail" placeholder="seu@email.com">
+                </div>
+                <div style="width: 100%;">
+                    <label>CPF:</label>
+                    <input type="text" id="loginCpf" placeholder="000.000.000-00" oninput="aplicarMascaraCPF(event)" maxlength="14">
+                </div>
+                <div style="width: 100%;">
+                    <label>Como você vai usar a plataforma?</label>
+                    <select id="loginTipo">
+                        <option value="noivos">Sou Noiva(o) - Meu Casamento</option>
+                        <option value="cerimonialista">Sou Cerimonialista / Montador</option>
+                    </select>
+                </div>
+                <button class="btn-acao btn-largo" onclick="entrarNoSistema()">Entrar no Sistema</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="appPrincipal" class="app-layout" style="display: none;">
         <aside class="sidebar">
             <div class="logo">
-                <h2>Elegance Planner</h2>
+                <h2>My Wedding Organize</h2>
             </div>
             
             <div class="perfil-selector" id="boxSeletorProjetos">
@@ -26,7 +56,7 @@
                 <button class="tab-btn" onclick="abrirAba(event, 'orcamento')">Painel Financeiro</button>
                 <button class="tab-btn" onclick="abrirAba(event, 'convidados')">Lista de Convidados</button>
                 <button class="tab-btn" onclick="abrirAba(event, 'cronograma')">Cronograma do Dia</button>
-                <button class="tab-btn" style="margin-top: 2rem; border-top: 1px solid #333;" onclick="abrirAba(event, 'perfil')">⚙️ Perfil e Conta</button>
+                <button class="tab-btn" style="margin-top: 2rem; border-top: 1px solid #333;" onclick="abrirAba(event, 'perfil')">⚙️ Meu Perfil</button>
             </nav>
         </aside>
 
@@ -58,26 +88,17 @@
                             <label>Digite ou selecione um serviço (Ex: Buffet, Decoração):</label>
                             <input type="text" id="inputBuscaServico" list="listaServicos" placeholder="Escolha um serviço...">
                             <datalist id="listaServicos">
-                                <option value="Buffet">
-                                <option value="Salão de Festa">
-                                <option value="Chácara">
-                                <option value="Decoração">
-                                <option value="Cerimonialista">
-                                <option value="Beleza">
-                                <option value="Vestido">
-                                <option value="Doceria">
-                                <option value="Drinks">
-                                <option value="Fotografia">
+                                <option value="Buffet"><option value="Salão de Festa"><option value="Chácara">
+                                <option value="Decoração"><option value="Cerimonialista"><option value="Beleza">
+                                <option value="Vestido"><option value="Doceria"><option value="Drinks"><option value="Fotografia">
                             </datalist>
                         </div>
                         <button onclick="adicionarFiltroServico()" class="btn-secundario" style="height: 43px; padding: 0 20px;">+ Adicionar</button>
                     </div>
                     
                     <div id="tagsFiltro" class="tags-container"></div>
-
                     <button onclick="buscarFornecedores()" class="btn-acao btn-largo" style="margin-top: 1.5rem;">Pesquisar Fornecedores</button>
                 </div>
-
                 <div id="resultadosBusca" class="resultados-grid"></div>
             </section>
 
@@ -85,34 +106,17 @@
                 <h2 class="titulo-secao">Painel Financeiro do Casal</h2>
                 <div class="configuracao-orcamento">
                     <div class="form-grupo">
-                        <div>
-                            <label>Orçamento Total Previsto (R$):</label>
-                            <input type="number" id="inputOrcamentoTotal" onchange="salvarConfiguracoesCasalFinanceiro()" placeholder="Ex: 50000">
-                        </div>
-                        <div>
-                            <label>Estimativa de Convidados (Qtd):</label>
-                            <input type="number" id="inputQtdConvidados" onchange="salvarConfiguracoesCasalFinanceiro()" placeholder="Ex: 150">
-                        </div>
+                        <div><label>Orçamento Total Previsto (R$):</label><input type="number" id="inputOrcamentoTotal" onchange="salvarConfiguracoesCasalFinanceiro()"></div>
+                        <div><label>Estimativa de Convidados (Qtd):</label><input type="number" id="inputQtdConvidados" onchange="salvarConfiguracoesCasalFinanceiro()"></div>
                     </div>
                 </div>
                 <div class="resumo-financeiro">
-                    <div class="card-valor">
-                        <span>Total Gasto:</span>
-                        <h3 id="displayTotalGasto">R$ 0,00</h3>
-                    </div>
-                    <div class="card-valor" id="cardSaldo">
-                        <span>Saldo Restante:</span>
-                        <h3 id="displaySaldo">R$ 0,00</h3>
-                    </div>
-                    <div class="card-valor">
-                        <span>Custo por Convidado:</span>
-                        <h3 id="displayCustoPorConvidado">R$ 0,00</h3>
-                    </div>
+                    <div class="card-valor"><span>Total Gasto:</span><h3 id="displayTotalGasto">R$ 0,00</h3></div>
+                    <div class="card-valor" id="cardSaldo"><span>Saldo Restante:</span><h3 id="displaySaldo">R$ 0,00</h3></div>
+                    <div class="card-valor"><span>Custo por Convidado:</span><h3 id="displayCustoPorConvidado">R$ 0,00</h3></div>
                 </div>
                 <table id="tabelaOrcamento">
-                    <thead>
-                        <tr><th>Serviço</th><th>Empresa</th><th>Valor</th><th>Ação</th></tr>
-                    </thead>
+                    <thead><tr><th>Serviço</th><th>Empresa</th><th>Valor</th><th>Ação</th></tr></thead>
                     <tbody id="listaOrcamento"></tbody>
                 </table>
             </section>
@@ -121,78 +125,61 @@
                 <h2 class="titulo-secao">Gestão de Convidados</h2>
                 <div class="filtro-box">
                     <div class="form-grupo" style="margin-bottom:0;">
-                        <div>
-                            <label>Nome do Convidado:</label>
-                            <input type="text" id="nomeConvidado" placeholder="Ex: Tio João">
-                        </div>
+                        <div><label>Nome:</label><input type="text" id="nomeConvidado" placeholder="Ex: Tio João"></div>
                         <div>
                             <label>Grupo:</label>
                             <select id="grupoConvidado">
-                                <option value="Família da Noiva">Família da Noiva</option>
-                                <option value="Família do Noivo">Família do Noivo</option>
-                                <option value="Amigos">Amigos</option>
-                                <option value="Trabalho">Trabalho</option>
+                                <option value="Família da Noiva">Família da Noiva</option><option value="Família do Noivo">Família do Noivo</option>
+                                <option value="Amigos">Amigos</option><option value="Trabalho">Trabalho</option>
                             </select>
                         </div>
                         <button onclick="adicionarConvidado()" class="btn-acao" style="height: 45px; align-self: flex-end;">Adicionar</button>
                     </div>
                 </div>
                 <table id="tabelaConvidados">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Grupo</th>
-                            <th>Status de Confirmação</th>
-                            <th>Ação</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Nome</th><th>Grupo</th><th>Status</th><th>Ação</th></tr></thead>
                     <tbody id="listaConvidadosTabela"></tbody>
                 </table>
             </section>
 
             <section id="cronograma" class="aba" style="display:none;">
-                <h2 class="titulo-secao">Cronograma Padrão do Grande Dia</h2>
-                <ul class="linha-do-tempo">
-                    <li><strong>14:00</strong> - Chegada no local para preparação</li>
-                    <li><strong>16:30</strong> - Chegada dos convidados</li>
-                    <li><strong>17:00</strong> - Início da Cerimônia</li>
-                    <li><strong>18:30</strong> - Sessão de fotos</li>
-                    <li><strong>19:00</strong> - Abertura da pista de dança e jantar</li>
-                </ul>
+                <h2 class="titulo-secao">Cronograma do Grande Dia</h2>
+                
+                <div class="filtro-box">
+                    <h3>Adicionar nova atividade</h3>
+                    <div class="form-grupo" style="align-items: flex-end; margin-bottom: 0;">
+                        <div style="flex: 1;">
+                            <label>Horário:</label>
+                            <input type="time" id="horaCronograma">
+                        </div>
+                        <div style="flex: 3;">
+                            <label>Atividade (Ex: Salão da noiva):</label>
+                            <input type="text" id="descCronograma" placeholder="O que vai acontecer?">
+                        </div>
+                        <button onclick="adicionarAtividadeCronograma()" class="btn-acao" style="height: 45px;">Adicionar</button>
+                    </div>
+                </div>
+
+                <ul class="linha-do-tempo" id="listaCronograma">
+                    </ul>
             </section>
 
             <section id="perfil" class="aba" style="display:none;">
-                <h2 class="titulo-secao">Configuração de Perfil</h2>
+                <h2 class="titulo-secao">Meu Perfil</h2>
                 
-                <div class="filtro-box">
-                    <h3>Dados da Conta</h3>
-                    <div class="form-grid">
-                        <div>
-                            <label>Nome Completo:</label>
-                            <input type="text" id="perfilNome" placeholder="Seu nome">
-                        </div>
-                        <div>
-                            <label>E-mail:</label>
-                            <input type="email" id="perfilEmail" placeholder="seu@email.com">
-                        </div>
-                        <div>
-                            <label>CPF:</label>
-                            <input type="text" id="perfilCpf" placeholder="000.000.000-00">
-                        </div>
-                        <div>
-                            <label>Tipo de Conta:</label>
-                            <select id="perfilTipo" onchange="alterarTipoConta()">
-                                <option value="cerimonialista">Cerimonialista / Montador</option>
-                                <option value="noivos">Sou Noiva / Noivo</option>
-                            </select>
-                        </div>
+                <div class="perfil-card">
+                    <div class="perfil-avatar">👤</div>
+                    <div class="perfil-info">
+                        <h3 id="displayPerfilNome">Nome do Usuário</h3>
+                        <p id="displayPerfilEmail">email@email.com</p>
+                        <p id="displayPerfilCpf">000.000.000-00</p>
+                        <span class="perfil-tag" id="displayPerfilTipo">Tipo de Conta</span>
                     </div>
-                    <button class="btn-acao" style="margin-top: 1rem;" onclick="salvarPerfil()">Salvar Perfil</button>
                 </div>
 
-                <div id="areaGestaoProjetos" class="filtro-box">
+                <div id="areaGestaoProjetos" class="filtro-box" style="margin-top: 2rem;">
                     <h3>Gestão de Casamentos (Projetos)</h3>
-                    <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">Como cerimonialista, adicione aqui os casais que você está atendendo:</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">Adicione aqui os casais que você está atendendo:</p>
                     <div class="form-grupo" style="align-items: flex-end;">
                         <div style="flex: 2;">
                             <label>Nome dos Noivos (Ex: Lucas e Camila):</label>
