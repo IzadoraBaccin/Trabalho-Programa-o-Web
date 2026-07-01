@@ -20,13 +20,13 @@ const bancoFornecedores = [
     { id: 14, nome: "Premium Planner", categoria: "Cerimonialista", preco: 4500, contato: "(11) 98888-5552" },
     { id: 15, nome: "Guia dos Noivos", categoria: "Cerimonialista", preco: 1800, contato: "(11) 98888-5553" },
     
-    { id: 16, nome: "Studio Bella", categoria: "Beleza", preco: 800, contato: "(11) 98888-6661" },
-    { id: 17, nome: "Dia da Noiva Lux", categoria: "Beleza", preco: 1500, contato: "(11) 98888-6662" },
-    { id: 18, makeup: true, nome: "Glow Makeup", categoria: "Beleza", preco: 600, contato: "(11) 98888-6663" },
+    { id: 16, nome: "Studio Bella", categoria: "Salão de Beleza", preco: 800, contato: "(11) 98888-6661" },
+    { id: 17, nome: "Dia da Noiva Lux", categoria: "Salão de Beleza", preco: 1500, contato: "(11) 98888-6662" },
+    { id: 18, makeup: true, nome: "Glow Makeup", categoria: "Salão de Beleza", preco: 600, contato: "(11) 98888-6663" },
     
-    { id: 19, nome: "Noiva Perfeita", categoria: "Vestido", preco: 2000, contato: "(11) 98888-7771" },
-    { id: 20, nome: "Boutique Paris", categoria: "Vestido", preco: 5000, contato: "(11) 98888-7772" },
-    { id: 21, nome: "Trajes & Cia", categoria: "Vestido", preco: 1200, contato: "(11) 98888-7773" },
+    { id: 19, nome: "Noiva Perfeita", categoria: "Aluguel de Roupas", preco: 2000, contato: "(11) 98888-7771" },
+    { id: 20, nome: "Boutique Paris", categoria: "Aluguel de Roupas", preco: 5000, contato: "(11) 98888-7772" },
+    { id: 21, nome: "Trajes & Cia", categoria: "Aluguel de Roupas", preco: 1200, contato: "(11) 98888-7773" },
     
     { id: 22, nome: "Doce Encanto", categoria: "Doceria", preco: 1500, contato: "(11) 98888-8881" },
     { id: 23, nome: "Chocolatier", categoria: "Doceria", preco: 3000, contato: "(11) 98888-8882" },
@@ -38,7 +38,11 @@ const bancoFornecedores = [
     
     { id: 28, nome: "Focus Fotografia", categoria: "Fotografia", preco: 3000, contato: "(11) 98888-0001" },
     { id: 29, nome: "Luz e Arte", categoria: "Fotografia", preco: 6000, contato: "(11) 98888-0002" },
-    { id: 30, nome: "Cliques Rápidos", categoria: "Fotografia", preco: 1500, contato: "(11) 98888-0003" }
+    { id: 30, nome: "Cliques Rápidos", categoria: "Fotografia", preco: 1500, contato: "(11) 98888-0003" },
+
+    { id: 31, nome: "Nicole S. Paisagista", categoria: "Paisagismo", preco: 5000, contato: "(45) 98818-0001" },
+    { id: 32, nome: "Paisagismos L&L", categoria: "Paisagismo", preco: 6000, contato: "(13) 98888-0002" },
+    { id: 33, nome: "Paisagens Bela", categoria: "Paisagismo", preco: 7500, contato: "(12) 98888-0003" }
 ];
 
 let dadosCasais = {};
@@ -62,7 +66,10 @@ function entrarNoSistema() {
     let cpf = document.getElementById("loginCpf").value;
     let tipo = document.getElementById("loginTipo").value;
 
-    if (!nome || !email || !cpf) return alert("Preencha todos os dados!");
+    if (!nome || !email || !cpf) {
+        alert("Preencha todos os dados!");
+        return;
+    }
 
     // Atualiza o Card de Perfil
     document.getElementById("displayPerfilNome").innerText = nome;
@@ -74,15 +81,39 @@ function entrarNoSistema() {
     let boxProjetos = document.getElementById("areaGestaoProjetos");
     let boxSeletor = document.getElementById("boxSeletorProjetos");
 
-    if(tipo === "noivos") {
+    if (tipo === "noivos") {
         boxProjetos.style.display = "none";
         boxSeletor.style.display = "none";
-        dadosCasais = { "meu_casamento": { nomeProjeto: "Meu Casamento", orcamentoTotal: 0, qtdConvidados: 0, dataCasamento: "", fornecedores: [], convidados: [], cronograma: [] }};
+        
+        dadosCasais = {
+            "meu_casamento": {
+                nomeProjeto: "Meu Casamento",
+                orcamentoTotal: 0,
+                qtdConvidados: 0,
+                dataCasamento: "",
+                fornecedores: [],
+                convidados: [],
+                cronograma: []
+            }
+        };
+        
         casalAtual = "meu_casamento";
     } else {
         boxProjetos.style.display = "block";
         boxSeletor.style.display = "block";
-        dadosCasais = { "exemplo_casal": { nomeProjeto: "Casal Exemplo (Editar)", orcamentoTotal: 0, qtdConvidados: 0, dataCasamento: "", fornecedores: [], convidados: [], cronograma: [] }};
+        
+        dadosCasais = {
+            "exemplo_casal": {
+                nomeProjeto: "Casal Exemplo (Editar)",
+                orcamentoTotal: 0,
+                qtdConvidados: 0,
+                dataCasamento: "",
+                fornecedores: [],
+                convidados: [],
+                cronograma: []
+            }
+        };
+        
         atualizarSelectProjetos();
         casalAtual = "exemplo_casal";
     }
@@ -96,9 +127,15 @@ function entrarNoSistema() {
 // NAVEGAÇÃO
 function abrirAba(evento, nomeAba) {
     let abas = document.getElementsByClassName("aba");
-    for (let i = 0; i < abas.length; i++) abas[i].style.display = "none";
+    for (let i = 0; i < abas.length; i++) {
+        abas[i].style.display = "none";
+    }
+    
     let botoes = document.getElementsByClassName("tab-btn");
-    for (let i = 0; i < botoes.length; i++) botoes[i].className = botoes[i].className.replace(" active", "");
+    for (let i = 0; i < botoes.length; i++) {
+        botoes[i].className = botoes[i].className.replace(" active", "");
+    }
+    
     document.getElementById(nomeAba).style.display = "block";
     evento.currentTarget.className += " active";
 }
@@ -106,20 +143,36 @@ function abrirAba(evento, nomeAba) {
 // GESTÃO DE PROJETOS (CERIMONIALISTA)
 function criarNovoProjeto() {
     let nome = document.getElementById("novoProjetoNome").value;
-    if(!nome) return;
+    
+    if (!nome) {
+        return;
+    }
+    
     let idGerado = nome.toLowerCase().replace(/[^a-z0-9]/g, "_");
-    if(!dadosCasais[idGerado]) {
-        dadosCasais[idGerado] = { nomeProjeto: nome, orcamentoTotal: 0, qtdConvidados: 0, dataCasamento: "", fornecedores: [], convidados: [], cronograma: [] };
+    
+    if (!dadosCasais[idGerado]) {
+        dadosCasais[idGerado] = {
+            nomeProjeto: nome,
+            orcamentoTotal: 0,
+            qtdConvidados: 0,
+            dataCasamento: "",
+            fornecedores: [],
+            convidados: [],
+            cronograma: []
+        };
+        
         atualizarSelectProjetos();
         document.getElementById("projetoAtual").value = idGerado;
         mudarProjeto();
     }
+    
     document.getElementById("novoProjetoNome").value = "";
 }
 
 function atualizarSelectProjetos() {
     let select = document.getElementById("projetoAtual");
     select.innerHTML = "";
+    
     for (const [id, dados] of Object.entries(dadosCasais)) {
         let opt = document.createElement("option");
         opt.value = id;
@@ -139,6 +192,7 @@ function mudarProjeto() {
 // CARREGAR DADOS GERAIS
 function carregarDadosDoCasal() {
     let dados = dadosCasais[casalAtual];
+    
     document.getElementById("inputOrcamentoTotal").value = dados.orcamentoTotal || "";
     document.getElementById("inputQtdConvidados").value = dados.qtdConvidados || "";
     
@@ -157,7 +211,12 @@ function carregarDadosDoCasal() {
 // ==========================================
 function aplicarMascaraMoeda(event) {
     let valor = event.target.value.replace(/\D/g, '');
-    if(valor === "") { event.target.value = ""; return; }
+    
+    if (valor === "") {
+        event.target.value = "";
+        return;
+    }
+    
     valor = (valor / 100).toFixed(2) + '';
     valor = valor.replace(".", ",");
     valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
@@ -165,7 +224,9 @@ function aplicarMascaraMoeda(event) {
 }
 
 function reverterMoeda(valorStr) {
-    if(!valorStr) return 0;
+    if (!valorStr) {
+        return 0;
+    }
     return parseFloat(valorStr.replace("R$ ", "").replace(/\./g, "").replace(",", ".")) || 0;
 }
 
@@ -183,7 +244,9 @@ function salvarQtdConvidadosInicio() {
     atualizarPainelOrcamento();
 }
 
-function salvarDataCasamento() { dadosCasais[casalAtual].dataCasamento = document.getElementById("dataCasamento").value; }
+function salvarDataCasamento() {
+    dadosCasais[casalAtual].dataCasamento = document.getElementById("dataCasamento").value;
+}
 
 function salvarConfiguracoesCasalFinanceiro() {
     dadosCasais[casalAtual].orcamentoTotal = parseFloat(document.getElementById("inputOrcamentoTotal").value) || 0;
@@ -196,10 +259,12 @@ function salvarConfiguracoesCasalFinanceiro() {
 // ==========================================
 function adicionarFiltroServico() {
     let servico = document.getElementById("inputBuscaServico").value.trim();
+    
     if (servico !== "" && !filtrosSelecionados.includes(servico)) {
         filtrosSelecionados.push(servico);
         renderizarTagsFiltro();
     }
+    
     document.getElementById("inputBuscaServico").value = "";
 }
 
@@ -211,6 +276,7 @@ function removerTagFiltro(index) {
 function renderizarTagsFiltro() {
     let container = document.getElementById("tagsFiltro");
     container.innerHTML = "";
+    
     filtrosSelecionados.forEach((filtro, index) => {
         container.innerHTML += `<div class="tag-item">${filtro} <span onclick="removerTagFiltro(${index})">X</span></div>`;
     });
@@ -220,16 +286,30 @@ function buscarFornecedores() {
     let maxBusca = dadosCasais[casalAtual].orcamentoTotal;
     let divResultados = document.getElementById("resultadosBusca");
 
-    if (maxBusca <= 0) return alert("Defina o orçamento disponível antes de buscar.");
-    if (filtrosSelecionados.length === 0) return alert("Adicione pelo menos um serviço na lista para filtrar.");
+    if (maxBusca <= 0) {
+        alert("Defina o orçamento disponível antes de buscar.");
+        return;
+    }
+    
+    if (filtrosSelecionados.length === 0) {
+        alert("Adicione pelo menos um serviço na lista para filtrar.");
+        return;
+    }
 
-    let resultados = bancoFornecedores.filter(forn => filtrosSelecionados.includes(forn.categoria) && forn.preco <= maxBusca);
+    let resultados = bancoFornecedores.filter(forn => 
+        filtrosSelecionados.includes(forn.categoria) && forn.preco <= maxBusca
+    );
 
     divResultados.innerHTML = ""; 
-    if (resultados.length === 0) return divResultados.innerHTML = "<p>Nenhum fornecedor encontrado no orçamento.</p>";
+    
+    if (resultados.length === 0) {
+        divResultados.innerHTML = "<p>Nenhum fornecedor encontrado no orçamento.</p>";
+        return;
+    }
 
     resultados.forEach(forn => {
         let jaAdicionado = dadosCasais[casalAtual].fornecedores.some(f => f.id === forn.id);
+        
         let botaoHtml = jaAdicionado 
             ? `<button class="btn-card-remover" onclick="removerDoOrcamentoPeloCard(${forn.id})">- Remover do Projeto</button>`
             : `<button class="btn-card-adicionar" onclick="adicionarAoOrcamentoPeloCard(${forn.id})">+ Adicionar ao Projeto</button>`;
@@ -254,7 +334,8 @@ function adicionarAoOrcamentoPeloCard(idFornecedor) {
 
 function removerDoOrcamentoPeloCard(idFornecedor) {
     let index = dadosCasais[casalAtual].fornecedores.findIndex(f => f.id === idFornecedor);
-    if(index !== -1) {
+    
+    if (index !== -1) {
         dadosCasais[casalAtual].fornecedores.splice(index, 1);
         atualizarPainelOrcamento();
         buscarFornecedores(); 
@@ -271,26 +352,35 @@ function atualizarPainelOrcamento() {
     let custoPorConvidado = dados.qtdConvidados > 0 ? (totalGasto / dados.qtdConvidados) : 0;
 
     document.getElementById("displayTotalGasto").innerText = `R$ ${totalGasto.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+    
     let displaySaldo = document.getElementById("displaySaldo");
     displaySaldo.innerText = `R$ ${saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
     displaySaldo.className = saldo < 0 ? "saldo-negativo" : "saldo-positivo";
+    
     document.getElementById("displayCustoPorConvidado").innerText = `R$ ${custoPorConvidado.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
     let lista = document.getElementById("listaOrcamento");
     lista.innerHTML = "";
+    
     dados.fornecedores.forEach((forn, index) => {
         lista.innerHTML += `
             <tr>
-                <td>${forn.categoria}</td><td>${forn.nome}</td>
+                <td>${forn.categoria}</td>
+                <td>${forn.nome}</td>
                 <td>R$ ${forn.preco.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                 <td><button class="btn-remover" onclick="removerDoOrcamentoNaTabela(${index})">Remover</button></td>
-            </tr>`;
+            </tr>
+        `;
     });
 }
+
 function removerDoOrcamentoNaTabela(index) {
     dadosCasais[casalAtual].fornecedores.splice(index, 1);
     atualizarPainelOrcamento();
-    if(document.getElementById("resultadosBusca").innerHTML !== "") buscarFornecedores();
+    
+    if (document.getElementById("resultadosBusca").innerHTML !== "") {
+        buscarFornecedores();
+    }
 }
 
 // ==========================================
@@ -299,8 +389,18 @@ function removerDoOrcamentoNaTabela(index) {
 function adicionarConvidado() {
     let nome = document.getElementById("nomeConvidado").value;
     let grupo = document.getElementById("grupoConvidado").value;
-    if (nome === "") return alert("Digite o nome.");
-    dadosCasais[casalAtual].convidados.push({ nome: nome, grupo: grupo, status: "Pendente" });
+    
+    if (nome === "") {
+        alert("Digite o nome.");
+        return;
+    }
+    
+    dadosCasais[casalAtual].convidados.push({
+        nome: nome,
+        grupo: grupo,
+        status: "Pendente"
+    });
+    
     document.getElementById("nomeConvidado").value = ""; 
     atualizarTabelaConvidados();
 }
@@ -308,11 +408,15 @@ function adicionarConvidado() {
 function atualizarTabelaConvidados() {
     let tbody = document.getElementById("listaConvidadosTabela");
     tbody.innerHTML = ""; 
+    
     dadosCasais[casalAtual].convidados.forEach((convidado, index) => {
-        let corClasse = convidado.status === "Pendente" ? "status-pendente" : convidado.status === "Confirmado" ? "status-confirmado" : "status-ausente";
+        let corClasse = convidado.status === "Pendente" ? "status-pendente" : 
+                        convidado.status === "Confirmado" ? "status-confirmado" : "status-ausente";
+        
         tbody.innerHTML += `
             <tr>
-                <td><strong>${convidado.nome}</strong></td><td>${convidado.grupo}</td>
+                <td><strong>${convidado.nome}</strong></td>
+                <td>${convidado.grupo}</td>
                 <td>
                     <select class="select-status ${corClasse}" onchange="mudarStatusConvidado(${index}, this.value)">
                         <option value="Pendente" ${convidado.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
@@ -321,11 +425,20 @@ function atualizarTabelaConvidados() {
                     </select>
                 </td>
                 <td><button class="btn-remover" onclick="removerConvidado(${index})">Deletar</button></td>
-            </tr>`;
+            </tr>
+        `;
     });
 }
-function mudarStatusConvidado(index, novoStatus) { dadosCasais[casalAtual].convidados[index].status = novoStatus; atualizarTabelaConvidados(); }
-function removerConvidado(index) { dadosCasais[casalAtual].convidados.splice(index, 1); atualizarTabelaConvidados(); }
+
+function mudarStatusConvidado(index, novoStatus) {
+    dadosCasais[casalAtual].convidados[index].status = novoStatus;
+    atualizarTabelaConvidados();
+}
+
+function removerConvidado(index) {
+    dadosCasais[casalAtual].convidados.splice(index, 1);
+    atualizarTabelaConvidados();
+}
 
 // ==========================================
 // ABA CRONOGRAMA DINÂMICO
@@ -334,9 +447,16 @@ function adicionarAtividadeCronograma() {
     let hora = document.getElementById("horaCronograma").value;
     let desc = document.getElementById("descCronograma").value;
     
-    if (!hora || !desc) return alert("Preencha o horário e a descrição da atividade!");
+    if (!hora || !desc) {
+        alert("Preencha o horário e a descrição da atividade!");
+        return;
+    }
     
-    dadosCasais[casalAtual].cronograma.push({ hora: hora, descricao: desc, concluido: false });
+    dadosCasais[casalAtual].cronograma.push({
+        hora: hora,
+        descricao: desc,
+        concluido: false
+    });
     
     // Ordena pelo horário
     dadosCasais[casalAtual].cronograma.sort((a, b) => a.hora.localeCompare(b.hora));
